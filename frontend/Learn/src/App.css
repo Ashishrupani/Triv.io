@@ -1,42 +1,142 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/*
+|--------------------------------------------------------------------------
+| StudyFlow Modern Design System - Core Theme Variables
+|--------------------------------------------------------------------------
+|
+| This file defines the core aesthetic principles for a clean, modern,
+| and engaging user interface, emphasizing clarity, subtle dynamism,
+| and a sophisticated use of transparency and color.
+|
+*/
+
+:root {
+  /* 1. Color Palette */
+  --primary-blue: #3a7bd5; /* A strong, modern blue */
+  --secondary-green: #2ebf91; /* A fresh, appealing green */
+
+  --gradient-blue-light-blue: linear-gradient(90deg, #3a7bd5 0%, #00d2ff 100%);
+  --gradient-blue-purple: linear-gradient(90deg, #3a7bd5 0%, #6a5acd 100%);
+  --gradient-green-light-green: linear-gradient(90deg, #2ebf91 0%, #5cb85c 100%); /* Added for consistent green buttons */
+
+
+  --solid-background: #f0f2f5; /* Lightest Background: Solid, clean base */
+  --glass-bg: rgba(255, 255, 255, 0.7); /* Glassmorphism Background: Main component background */
+  --glass-border: rgba(200, 200, 200, 0.5); /* Glassmorphism Border: Subtle outline for glass elements */
+
+  --text-primary: #333; /* Main body text, headings on light backgrounds */
+  --text-secondary: #666; /* Muted text, inactive elements */
+  --text-white: #ffffff; /* For text on dark/gradient backgrounds */
+
+
+  --success-color: var(--secondary-green); /* Success Feedback: Same as Secondary Accent Green, for correct answers */
+  --error-color: #e74c3c; /* Error Feedback: A distinct red for incorrect answers */
+
+  --shadow-color-light: rgba(0, 0, 0, 0.05); /* Soft, subtle shadows */
+  --shadow-color-medium: rgba(0, 0, 0, 0.1);
+  --shadow-color-deep: rgba(0, 0, 0, 0.15); /* Slightly deeper for main containers */
+
+
+  /* 2. Typography */
+  --font-family-primary: 'Inter', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --font-size-base: 1em; /* Base for scaling, typically 16px */
+  --font-size-small: 0.9em;
+  --font-size-medium: 1.05em;
+  --font-size-large: 1.15em;
+  --font-size-xl: 1.3em;
+  --font-size-h2: 2.3em;
+  --font-size-h3: 1.8em;
+
+  --letter-spacing-tight: -0.5px;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.5px;
+  --letter-spacing-wider: 0.8px;
+
+
+  /* 3. Spacing & Layout */
+  --spacing-xxs: 4px;
+  --spacing-xs: 8px;
+  --spacing-s: 12px;
+  --spacing-m: 16px;
+  --spacing-l: 20px;
+  --spacing-xl: 24px;
+  --spacing-xxl: 30px;
+  --spacing-xxxl: 40px;
+  --spacing-xxxxl: 45px;
+
+  --container-max-width: 850px;
+
+
+  /* 4. Shapes & Rounding */
+  --border-radius-card: 18px; /* For main containers/cards */
+  --border-radius-element: 10px; /* For buttons, inputs, table rows */
+  --border-radius-full: 9999px; /* For pill-shaped elements */
+
+
+  /* 5. Interactive Elements & Dynamics (Transition durations) */
+  --transition-speed-fast: 0.15s;
+  --transition-speed-medium: 0.2s;
+  --transition-speed-slow: 0.3s;
+  --transition-ease: ease-in-out;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* ----------------------------------------------------------- */
+/* GLOBAL STYLES (Apply these to your root App.js or index.css) */
+/* ----------------------------------------------------------- */
+
+body {
+  background-color: var(--solid-background);
+  color: var(--text-primary);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  margin: 0;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+h2 { font-size: var(--font-size-h2); }
+h3 { font-size: var(--font-size-h3); }
+
+button {
+    font-family: var(--font-family-primary);
+    outline: none;
 }
 
-.card {
-  padding: 2em;
+/* Base link style */
+a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    transition: color var(--transition-speed-medium) var(--transition-ease);
 }
 
-.read-the-docs {
-  color: #888;
+a:hover {
+    color: var(--dark-blue); /* A darker blue might be good here */
 }
+
+/* ----------------------------------------------------------- */
+/* UTILITY CLASSES (Optional, for quick use) */
+/* ----------------------------------------------------------- */
+
+/* Example: flexbox utilities */
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.shadow-medium {
+    box-shadow: 0 var(--spacing-xs) var(--spacing-xl) var(--shadow-color-medium);
+}
+
+/* And so on for other common patterns */
