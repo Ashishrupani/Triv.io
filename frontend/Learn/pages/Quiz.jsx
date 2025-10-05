@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { addScore } from '../src/leaderboard';
 import { useNavigate } from 'react-router-dom';
+import { getProfile } from '../src/storage/profileStore';
 // IMPORT THE CSS FILE
 import '../styles/Quiz.css'; 
 
@@ -100,11 +101,21 @@ const questions = [
 ];
 
 const Quiz = () => {
-    const { user, isAuthenticated } = useAuth0();
+    const { user, isAuthenticated, loginWithRedirect } = useAuth0();
     const navigate = useNavigate();
+    const [profile, setProfile] = useState(() => getProfile(user));
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [score, setScore] = useState(0);
     const [showScore, setShowScore] = useState(false);
+    const [startedAt, setStartedAt] = useState(() => Date.now());
+
+    useEffect(() => {
+        setProfile(getProfile(user));
+    }, [user]);
+
+    useEffect(() => {
+        setStartedAt(Date.now());
+    }, []);
 
     const handleAnswerOptionClick = (isCorrect) => {
         if (isCorrect) {
@@ -133,17 +144,20 @@ const Quiz = () => {
                     <button
                       className="answer-button"
                       onClick={() => {
-                        const name = (() => {
-                          try {
-                            const raw = localStorage.getItem('profile_v1');
-                            const data = raw ? JSON.parse(raw) : {};
-                            return data.displayName || user?.name || 'Guest';
-                          } catch {
-                            return user?.name || 'Guest';
+                        const durationSeconds = Math.round((Date.now() - startedAt) / 1000);
+                        addScore({
+                          score,
+                          total: questions.length,
+                          difficulty: 'Practice',
+                          durationSeconds,
+                        }, isAuthenticated ? user : undefined);
+                        if (!isAuthenticated && loginWithRedirect) {
+                          const wantLogin = confirm('Score saved locally. Log in to sync it to your profile?');
+                          if (wantLogin) {
+                            loginWithRedirect({ screen_hint: 'login' }).catch(() => {});
+                            return;
                           }
-                        })();
-
-                        addScore({ name, score, total: questions.length });
+                        }
                         navigate('/leaderboard');
                       }}
                     >

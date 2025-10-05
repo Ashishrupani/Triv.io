@@ -2,13 +2,14 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { Routes } from "react-router-dom";
 import { Route, Navigate } from "react-router-dom";
-import { use, useEffect } from "react";
+import { useEffect } from "react";
 import HomePage from "../pages/HomePage.jsx";
 import WelcomePage from "../pages/WelcomePage.jsx";
 import CreateQuiz from "../pages/CreateQuiz.jsx";
 import Quiz from "../pages/Quiz.jsx";
 import Profile from "../pages/Profile.jsx";
 import Leaderboard from "../pages/Leaderboard.jsx";
+import { ensureProfileFromAuth } from "./storage/profileStore";
 
 
 const ProtectedRoute = ({children}) => {
@@ -35,13 +36,13 @@ const RedirectAuthenticatedUser = ({children})=> {
 }
 
 function App() {
-  const {loginWithRedirect, logout, isAuthenticated, user, isLoading } = useAuth0();
+  const { isAuthenticated, user } = useAuth0();
 
   useEffect(() => {
-    if(!isAuthenticated){
-      <Navigate to="/" replace/>
+    if (isAuthenticated && user) {
+      ensureProfileFromAuth(user);
     }
-  })
+  }, [isAuthenticated, user]);
 
   return (
     <>
