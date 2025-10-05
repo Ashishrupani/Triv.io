@@ -15,9 +15,9 @@ function HomePage() {
           <div className="navbar-content">
             <div className="navbar-logo">triv.io</div>
             <nav className="navbar-nav">
-              <a href="#quiz" className="nav-link active">Quiz</a>
-              <a href="#leaderboard" className="nav-link">Leaderboard</a>
-              <a href="#profile" className="nav-link">Profile</a>
+              <a href="/quiz" className="nav-link active">Quiz</a>
+              <a href="/leaderboard" className="nav-link">Leaderboard</a>
+              <a href="/profile" className="nav-link">Profile</a>
             </nav>
           </div>
         </div>

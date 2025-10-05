@@ -291,11 +291,11 @@ export default function App() {
           </a>
 
           <nav className="nav">
-            <a href="#">Leaderboards</a>
+            <a href="/leaderboard">Leaderboards</a>
 
             <a href="#">Join Quizzes</a>
 
-            <a href="#">Profile</a>
+            <a href="/profile">Profile</a>
           </nav>
         </div>
       </header>
