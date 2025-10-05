@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { use, useState } from 'react';
 import '../styles/Quiz.css';
+import { useLocation } from "react-router-dom";
 
 const sampleQuestions = [
   { question: 'What does HTML stand for?', options: ['HyperText Markup Language', 'HyperText Machine Language', 'HighText Markdown Language', 'None of the above'], answer: 0 },
@@ -20,11 +21,34 @@ export default function Quiz() {
   const [selected, setSelected] = useState(null);
   const [finished, setFinished] = useState(false);
 
+  const location = useLocation();
+  let { quiz } = location.state;
+  let quizzes = quiz.message;
+
+  // If quizzes is a string, extract the array and parse it
+  if (typeof quizzes === "string") {
+    // Extract the array part from the string
+    const arrMatch = quizzes.match(/\[.*\]/s);
+    let arrStr = quizzes;
+    if (arrMatch) arrStr = arrMatch[0];
+    try {
+      quizzes = JSON.parse(arrStr.replace(/'/g, '"'));
+    } catch {
+      quizzes = sampleQuestions;
+    }
+  }
+
+  if (!Array.isArray(quizzes)) {
+    quizzes = sampleQuestions;
+  }
+
+  console.log("Quiz data:", quizzes);
+
   const handleNext = () => {
-    if (selected === sampleQuestions[current].answer) {
+    if (selected === quizzes[current].answer) {
       setScore(score + 1);
     }
-    if (current + 1 < sampleQuestions.length) {
+    if (current + 1 < quizzes.length) {
       setCurrent(current + 1);
       setSelected(null);
     } else {
@@ -32,23 +56,24 @@ export default function Quiz() {
     }
   };
 
+
   return (
     <div className="quiz-container">
       <div className="quiz-card">
         {finished ? (
           <div className="quiz-complete">
             <h2>Quiz Complete 🎉</h2>
-            <p className="score-text">Your Score: {score} / {sampleQuestions.length}</p>
-            <div className="progress-bar"><div className="progress-bar-fill" style={{ width: `${(score / sampleQuestions.length) * 100}%` }}></div></div>
+            <p className="score-text">Your Score: {score} / {quizzes.length}</p>
+            <div className="progress-bar"><div className="progress-bar-fill" style={{ width: `${(score / quizzes.length) * 100}%` }}></div></div>
             <button className="next-btn" onClick={() => window.location.reload()}>Retake Quiz</button>
           </div>
         ) : (
           <div key={current}>
-            <h2>Question {current + 1} / {sampleQuestions.length}</h2>
-            <div className="progress-bar"><div className="progress-bar-fill" style={{ width: `${((current + 1) / sampleQuestions.length) * 100}%` }}></div></div>
-            <h3 className="quiz-question">{sampleQuestions[current].question}</h3>
+            <h2>Question {current + 1} / {quizzes.length}</h2>
+            <div className="progress-bar"><div className="progress-bar-fill" style={{ width: `${((current + 1) / quizzes.length) * 100}%` }}></div></div>
+            <h3 className="quiz-question">{quizzes[current].question}</h3>
             <div className="quiz-options">
-              {sampleQuestions[current].options.map((opt, i) => (
+              {quizzes[current].options.map((opt, i) => (
                 <button
                   key={i}
                   className={`quiz-option ${selected === i ? 'selected' : ''}`}

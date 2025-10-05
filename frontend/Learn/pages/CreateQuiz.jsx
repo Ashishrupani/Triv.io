@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import '../styles/CreateQuiz.css';
+import { useNavigate } from "react-router-dom";
+
 
 const STORAGE_KEY = 'triv_notes_v1';
 
@@ -14,6 +16,8 @@ export default function CreateQuiz() {
   const [editingId, setEditingId] = useState(null);
   const [status, setStatus] = useState('');
   const [previewId, setPreviewId] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     try {
@@ -72,6 +76,24 @@ export default function CreateQuiz() {
     resetForm();
   }
 
+  async function handleGenerateQuiz() {
+    const response = await fetch('http://localhost:5000/api/upload-notes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query : "Make a 10 question quiz using these notes below", notes }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      setPreviewId(data.id);
+      showStatus('Quiz generated successfully!');
+
+      navigate("/quiz", { state: { quiz: data } });
+
+    } else {
+      showStatus('Failed to generate quiz.');
+    }
+  }
   function handleUpload(event) {
     const files = Array.from(event.target.files || []);
     if (!files.length) return;
@@ -208,8 +230,8 @@ export default function CreateQuiz() {
               When the AI wiring finishes you’ll be able to pick a difficulty, generate questions, and share
               quizzes instantly. Keep staging your notes so launch day is seamless.
             </p>
-            <button type="button" className="btn disabled" disabled>
-              Generate quiz (AI in progress)
+            <button onClick={handleGenerateQuiz} type="button" className="btn primary">
+              Generate quiz
             </button>
           </div>
         </section>
