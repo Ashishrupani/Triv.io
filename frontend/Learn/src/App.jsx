@@ -6,6 +6,7 @@ import { use, useEffect } from "react";
 import HomePage from "../pages/HomePage.jsx";
 import WelcomePage from "../pages/WelcomePage.jsx";
 import CreateQuiz from "../pages/CreateQuiz.jsx";
+import LeaderboardPage from "../pages/LeaderboardPage.jsx";
 
 
 const ProtectedRoute = ({children}) => {
