@@ -8,13 +8,10 @@ import WelcomePage from "../pages/WelcomePage.jsx";
 
 
 const ProtectedRoute = ({children}) => {
-  const {isAuthenticated, user} = useAuth0();
+  const {isAuthenticated} = useAuth0();
 
   if(!isAuthenticated){
     return <Navigate to="/" replace/>;
-  }
-  if(!user.email_verified){
-    return <div>Please verify your email to access this page.</div>;
   }
 
   //if auth and verified pass
@@ -23,10 +20,10 @@ const ProtectedRoute = ({children}) => {
 }
 
 const RedirectAuthenticatedUser = ({children})=> {
-  const {isAuthenticated, user} = useAuth0();
+  const {isAuthenticated} = useAuth0();
 
-  if(isAuthenticated && user.email_verified){
-    return <Navigate to="/" replace/>
+  if(isAuthenticated){
+    return <Navigate to="/home" replace/>
   }
 
   return children;
@@ -34,7 +31,7 @@ const RedirectAuthenticatedUser = ({children})=> {
 }
 
 function App() {
-  const { loginWithRedirect, logout, isAuthenticated, user, isLoading } = useAuth0();
+  const {loginWithRedirect, logout, isAuthenticated, user, isLoading } = useAuth0();
 
   useEffect(() => {
     if(!isAuthenticated){
@@ -44,7 +41,7 @@ function App() {
 
   return (
     <>
-     {/* <div style={{ textAlign: 'center', marginTop: 40 }}>
+      {/* <div style={{ textAlign: 'center', marginTop: 40 }}>
       <h1>Auth0 React Demo</h1>
       {!isAuthenticated ? (
         <button onClick={() => loginWithRedirect()}>Log In</button>
@@ -58,8 +55,8 @@ function App() {
     </div>  */}
 
     <Routes>
-      <Route path="/" element={<RedirectAuthenticatedUser><HomePage /></RedirectAuthenticatedUser>} />
-      <Route path="/home" element={<ProtectedRoute><WelcomePage /></ProtectedRoute>} />
+      <Route path="/" element={<RedirectAuthenticatedUser><WelcomePage /></RedirectAuthenticatedUser>} />
+      <Route path="/home" element={<ProtectedRoute><HomePage/></ProtectedRoute>} />
     </Routes>
     </>
   );
