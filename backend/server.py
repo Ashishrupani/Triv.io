@@ -1,49 +1,45 @@
 from flask import Flask, jsonify, request
 import json
+from flask_cors import CORS
 from os import environ as env
-from urllib.parse import quote_plus, urlencode
-
-from authlib.integrations.flask_client import OAuth
-from dotenv import find_dotenv, load_dotenv
-from flask import Flask, redirect, render_template, session, url_for
-
-
+from dotenv import load_dotenv
+from google import genai
+import os
 
 load_dotenv()
 
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 
 app = Flask(__name__)
-app.secret_key = env.get("APP_SECRET_KEY")
 
-oauth = OAuth(app)
 
-oauth.register(
-    "auth0",
-    client_id=env.get("AUTH0_CLIENT_ID"),
-    client_secret=env.get("AUTH0_CLIENT_SECRET"),
-    client_kwargs={
-        "scope": "openid profile email",
-    },
-    server_metadata_url=f'https://{env.get("AUTH0_DOMAIN")}/.well-known/openid-configuration'
-)
-
-@app.route("/login")
-def login():
-    return oauth.auth0.authorize_redirect(
-        redirect_uri=url_for("callback", _external=True)
-    )
-
-@app.route("/callback", methods=["GET", "POST"])
-def callback():
-    token = oauth.auth0.authorize_access_token()
-    session["user"] = token
-    return redirect("/")
-
+CORS(app, origins=["http://localhost:5173"]) 
 
 
 @app.route('/')
 def home():
     return 'Hello from Flask!'
+
+@app.route('/api/generate-text', methods=['GET'])
+def generate_text():
+    query = request.args.get('query')
+    client = genai.Client(api_key=GEMINI_API_KEY)
+    response = client.models.generate_content(
+        model="gemini-2.5-flash", contents=query)
+    print(response.text)
+    return jsonify({'response': response.text}), 200
+
+@app.route('/api/upload-notes', methods=['GET'])
+def upload_notes():
+    data = request.json
+    query = data.get('query')
+    notes = data.get('notes')
+    print("Received notes:", notes)
+    print("Received query:", query)
+    client = genai.Client(api_key=GEMINI_API_KEY)
+    response = client.models.generate_content(
+        model="gemini-2.5-flash", contents=query + notes)
+    return jsonify({'message': response.text}), 200
 
 # @app.route('/api/login', methods=['POST'])
 # def login():
