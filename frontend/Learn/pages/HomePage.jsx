@@ -1,21 +1,65 @@
-
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import './HomePage.css'; // Make sure this CSS file is present
 
 const HomePage = () => {
-	return (
-		<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '80vh', background: '#f9f9f9' }}>
-			<h1 style={{ color: '#2d72d9' }}>Welcome to Triv.io!</h1>
-			<p style={{ fontSize: '1.2rem', maxWidth: 500, textAlign: 'center', marginBottom: 32 }}>
-				This is Home
-			</p>
-			<div style={{ display: 'flex', gap: 16 }}>
-				<Link to="/quizzes" style={{ padding: '10px 24px', background: '#2d72d9', color: '#fff', borderRadius: 6, textDecoration: 'none' }}>Explore Quizzes</Link>
-				<Link to="/profile" style={{ padding: '10px 24px', background: '#fff', color: '#2d72d9', border: '1px solid #2d72d9', borderRadius: 6, textDecoration: 'none' }}>My Profile</Link>
-			</div>
-		</div>
-	);
+  // Placeholder data for a logged-in user
+  const userName = "Sarah";
+  const userXP = 70; // Current XP
+  const xpNeededForNextLevel = 100; // XP needed for the next level
+  const xpPercentage = (userXP / xpNeededForNextLevel) * 100;
+
+  return (
+    <div className="homepage-container">
+      {/* Navigation Bar (as before) */}
+      <nav className="navbar">
+        <div className="navbar-left">
+          <img src="/trivio-logo.png" alt="Triv.io Logo" className="nav-logo" />
+          <span className="app-name">Triv.io</span>
+        </div>
+        <div className="navbar-right">
+          <a href="#" className="nav-link active">Quiz</a> {/* 'active' class for current page */}
+          <a href="#" className="nav-link">Leaderboard</a>
+          <div className="user-profile">
+            <span className="user-icon">👤</span>
+            <span className="username">{userName}</span>
+          </div>
+        </div>
+      </nav>
+
+      {/* Main content frame */}
+      <div className="main-content-frame">
+        <header className="welcome-section">
+          <h2>Welcome Back!</h2>
+
+          <div className="xp-display">
+            <span className="xp-label">XP</span>
+            <div className="xp-bar-container">
+              <div className="xp-bar-fill" style={{ width: `${xpPercentage}%` }}></div>
+            </div>
+            <span className="xp-value">{userXP}/{xpNeededForNextLevel}</span>
+          </div>
+        </header>
+
+        <section className="action-cards-section">
+          <div className="action-card">
+            <h3>Create Quiz</h3>
+            <p>Upload your notes and let Gemini AI build a custom quiz.</p>
+            {/* No button functionality yet */}
+          </div>
+          <div className="action-card">
+            <h3>Study Quizzes</h3>
+            <p>Review your past quizzes or explore new topics.</p>
+            {/* No button functionality yet */}
+          </div>
+          <div className="action-card">
+            <h3>Challenge Friends</h3>
+            <p>Invite friends for a fun and competitive learning session.</p>
+            {/* No button functionality yet */}
+          </div>
+        </section>
+      </div>
+    </div>
+  );
 };
 
 export default HomePage;
-
