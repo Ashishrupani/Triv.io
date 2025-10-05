@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
-import "../styles/App.css";
+import "../src/App.css";
 import "../styles/CreateQuiz.css";
 
 function uid() {

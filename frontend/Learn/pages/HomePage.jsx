@@ -1,10 +1,18 @@
 
-import React from "react";
+import React, { use } from "react";
 import { Link } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const HomePage = () => {
+    const {isAuthenticated, isLoading} = useAuth0();
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+
 	return (
-		<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '80vh', background: '#f9f9f9' }}>
+    isAuthenticated ? (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '80vh', background: '#f9f9f9' }}>
 			<h1 style={{ color: '#2d72d9' }}>Welcome to Triv.io!</h1>
 			<p style={{ fontSize: '1.2rem', maxWidth: 500, textAlign: 'center', marginBottom: 32 }}>
 				This is Home
@@ -13,7 +21,7 @@ const HomePage = () => {
 				<Link to="/quizzes" style={{ padding: '10px 24px', background: '#2d72d9', color: '#fff', borderRadius: 6, textDecoration: 'none' }}>Explore Quizzes</Link>
 				<Link to="/profile" style={{ padding: '10px 24px', background: '#fff', color: '#2d72d9', border: '1px solid #2d72d9', borderRadius: 6, textDecoration: 'none' }}>My Profile</Link>
 			</div>
-		</div>
+		</div>) : <Navigate to="/" replace />
 	);
 };
 

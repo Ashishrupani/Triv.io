@@ -29,6 +29,7 @@ function WelcomePage() {
   }, []);
 
   return (
+    isAuthenticated ? <Navigate to="/home" replace /> : <>
     <div className="welcome-page">
       <header className="header">
         <div className="logo-container">
@@ -61,6 +62,7 @@ function WelcomePage() {
         <p className="auth-security">Secured by Auth0 <span role="img" aria-label="lock">🔒</span></p>
       </div>
     </div>
+    </>
   );
 }
 

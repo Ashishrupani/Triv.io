@@ -5,6 +5,7 @@ import { Route, Navigate } from "react-router-dom";
 import { use, useEffect } from "react";
 import HomePage from "../pages/HomePage.jsx";
 import WelcomePage from "../pages/WelcomePage.jsx";
+import CreateQuiz from "../pages/CreateQuiz.jsx";
 
 
 const ProtectedRoute = ({children}) => {
@@ -55,8 +56,9 @@ function App() {
     </div>  */}
 
     <Routes>
-      <Route path="/" element={<RedirectAuthenticatedUser><WelcomePage /></RedirectAuthenticatedUser>} />
-      <Route path="/home" element={<ProtectedRoute><HomePage/></ProtectedRoute>} />
+      <Route path="/" element={<WelcomePage />}/>
+      <Route path="/home" element={<HomePage/>} />
+      <Route path="/create-quiz" element={<CreateQuiz/>} />
     </Routes>
     </>
   );
