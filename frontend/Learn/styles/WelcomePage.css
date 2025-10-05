@@ -196,3 +196,27 @@
   .auth-security span {
     font-size: 1.1rem;
   }
+
+  /* Quick links under buttons */
+  .quick-links {
+    margin-top: 14px;
+    display: flex;
+    gap: 12px;
+  }
+
+  .link-pill {
+    display: inline-block;
+    padding: 10px 16px;
+    border-radius: 999px;
+    text-decoration: none;
+    color: #0ea5e9; /* sky-500 */
+    background: rgba(14, 165, 233, 0.08);
+    border: 1px solid rgba(14, 165, 233, 0.25);
+    transition: all 0.2s ease;
+    font-weight: 600;
+  }
+
+  .link-pill:hover {
+    background: rgba(14, 165, 233, 0.15);
+    transform: translateY(-1px);
+  }

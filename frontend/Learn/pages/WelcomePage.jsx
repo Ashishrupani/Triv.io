@@ -39,7 +39,8 @@ function WelcomePage() {
         <nav className="nav-links">
           <a href="#" className="nav-item">Our Story</a>
           <a href="#" className="nav-item">Frameworks Used</a>
-          <a href="#" className="nav-item">Welcome</a>
+          <a href="/leaderboard" className="nav-item">Leaderboard</a>
+          <a href="/profile" className="nav-item">Profile</a>
         </nav>
       </header>
 
@@ -57,6 +58,11 @@ function WelcomePage() {
         <div className="auth-buttons">
           <button className="sign-up-btn" onClick={handleSignUp}>SIGN UP</button>
           <button className="login-btn" onClick={handleLogin}>LOGIN</button>
+        </div>
+
+        <div className="quick-links">
+          <a href="/leaderboard" className="link-pill">View Leaderboard</a>
+          <a href="/profile" className="link-pill">View Profile</a>
         </div>
 
         <p className="auth-security">Secured by Auth0 <span role="img" aria-label="lock">🔒</span></p>

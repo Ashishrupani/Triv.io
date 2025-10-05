@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { addScore } from '../src/leaderboard';
+import { useNavigate } from 'react-router-dom';
 // IMPORT THE CSS FILE
 import '../styles/Quiz.css'; 
 
@@ -97,6 +100,8 @@ const questions = [
 ];
 
 const Quiz = () => {
+    const { user, isAuthenticated } = useAuth0();
+    const navigate = useNavigate();
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [score, setScore] = useState(0);
     const [showScore, setShowScore] = useState(false);
@@ -122,7 +127,28 @@ const Quiz = () => {
                 * 1. SCORE SECTION (Uses className="score-section")
                 * ------------------- */
                 <div className="score-section">
-                    You scored {score} out of {questions.length}
+                    <div style={{ marginBottom: 12 }}>
+                        You scored {score} out of {questions.length}
+                    </div>
+                    <button
+                      className="answer-button"
+                      onClick={() => {
+                        const name = (() => {
+                          try {
+                            const raw = localStorage.getItem('profile_v1');
+                            const data = raw ? JSON.parse(raw) : {};
+                            return data.displayName || user?.name || 'Guest';
+                          } catch {
+                            return user?.name || 'Guest';
+                          }
+                        })();
+
+                        addScore({ name, score, total: questions.length });
+                        navigate('/leaderboard');
+                      }}
+                    >
+                      Save Score to Leaderboard
+                    </button>
                 </div>
             ) : (
                 /* -------------------
