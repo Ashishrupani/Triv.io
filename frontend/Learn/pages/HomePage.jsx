@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../styles/HomePage.css';
+import { Navigate } from 'react-router-dom';
 
 function HomePage() {
   const [userXP, setUserXP] = useState(70);
@@ -16,7 +17,7 @@ function HomePage() {
             <div className="navbar-logo">triv.io</div>
             <nav className="navbar-nav">
               <a href="#quiz" className="nav-link active">Quiz</a>
-              <a href="#leaderboard" className="nav-link">Leaderboard</a>
+              <Link to="/leaderboard" className="nav-link">Leaderboard</Link>
               <a href="#profile" className="nav-link">Profile</a>
             </nav>
           </div>
