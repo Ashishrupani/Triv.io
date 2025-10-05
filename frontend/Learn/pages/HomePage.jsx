@@ -1,5 +1,5 @@
 import React from 'react';
-import './HomePage.css'; // Make sure this CSS file is present
+import 'styles./HomePage.css'; // Make sure this CSS file is present
 
 const HomePage = () => {
   // Placeholder data for a logged-in user
