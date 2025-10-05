@@ -11,22 +11,6 @@
     --blur-amount: 10px; /* For glassmorphism */
   }
   
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-      sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    background-color: #f0f2f5; /* Light grey background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    overflow: hidden; /* Prevent scrollbar from background elements */
-    position: relative;
-  }
-  
   .welcome-page {
     width: 100%;
     height: 100vh; /* Full viewport height */
@@ -195,4 +179,28 @@
   
   .auth-security span {
     font-size: 1.1rem;
+  }
+
+  /* Quick links under buttons */
+  .quick-links {
+    margin-top: 14px;
+    display: flex;
+    gap: 12px;
+  }
+
+  .link-pill {
+    display: inline-block;
+    padding: 10px 16px;
+    border-radius: 999px;
+    text-decoration: none;
+    color: #0ea5e9; /* sky-500 */
+    background: rgba(14, 165, 233, 0.08);
+    border: 1px solid rgba(14, 165, 233, 0.25);
+    transition: all 0.2s ease;
+    font-weight: 600;
+  }
+
+  .link-pill:hover {
+    background: rgba(14, 165, 233, 0.15);
+    transform: translateY(-1px);
   }
