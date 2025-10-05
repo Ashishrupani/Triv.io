@@ -59,7 +59,7 @@ function App() {
       <Route path="/" element={<WelcomePage />}/>
       <Route path="/home" element={<HomePage/>} />
       <Route path="/create-quiz" element={<CreateQuiz/>} />
-      <Route path="/home#leaderboard" element={<LeaderboardPage/>} />
+      <Route path="/home/leaderboard" element={<LeaderboardPage/>} />
 
     </Routes>
     </>
