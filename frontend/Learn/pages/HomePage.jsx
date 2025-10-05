@@ -1,65 +1,69 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../styles/HomePage.css';
 
-const HomePage = () => {
-  // Placeholder data for a logged-in user
-  const userName = "Sarah";
-  const userXP = 70; // Current XP
-  const xpNeededForNextLevel = 100; // XP needed for the next level
-  const xpPercentage = (userXP / xpNeededForNextLevel) * 100;
+function HomePage() {
+  const [userXP, setUserXP] = useState(70);
+  const maxXP = 100;
 
   return (
-    <div className="homepage-container">
-      {/* Navigation Bar (as before) */}
-      <nav className="navbar">
-        <div className="navbar-left">
-          <img src="/trivio-logo.png" alt="Triv.io Logo" className="nav-logo" />
-          <span className="app-name">Triv.io</span>
-        </div>
-        <div className="navbar-right">
-          <a href="#" className="nav-link active">Quiz</a> {/* 'active' class for current page */}
-          <a href="#" className="nav-link">Leaderboard</a>
-          <div className="user-profile">
-            <span className="user-icon">👤</span>
-            <span className="username">{userName}</span>
+    <div className="homepage-wrapper">
+      {/* Top Navigation Bar */}
+      <header className="navbar">
+        <div className="navbar-container">
+          <div className="navbar-content">
+            <div className="navbar-logo">triv.io</div>
+            <nav className="navbar-nav">
+              <a href="#quiz" className="nav-link active">
+                Quiz
+              </a>
+              <a href="#leaderboard" className="nav-link">
+                Leaderboard
+              </a>
+              <a href="#profile" className="nav-link">
+                Profile
+              </a>
+            </nav>
           </div>
         </div>
-      </nav>
+      </header>
 
-      {/* Main content frame */}
-      <div className="main-content-frame">
-        <header className="welcome-section">
-          <h2>Welcome Back!</h2>
+      {/* Main Content Area */}
+      <main className="main-content">
+        <div className="content-card">
+          <h1 className="welcome-heading">
+            Welcome Back!
+          </h1>
 
-          <div className="xp-display">
+          {/* XP Progress Section */}
+          <div className="xp-progress-section">
             <span className="xp-label">XP</span>
             <div className="xp-bar-container">
-              <div className="xp-bar-fill" style={{ width: `${xpPercentage}%` }}></div>
+              <div
+                className="xp-bar-fill"
+                style={{ width: `${(userXP / maxXP) * 100}%` }}
+              ></div>
             </div>
-            <span className="xp-value">{userXP}/{xpNeededForNextLevel}</span>
+            <span className="xp-value">
+              {userXP}/{maxXP}
+            </span>
           </div>
-        </header>
 
-        <section className="action-cards-section">
-          <div className="action-card">
-            <h3>Create Quiz</h3>
-            <p>Upload your notes and let Gemini AI build a custom quiz.</p>
-            {/* No button functionality yet */}
+          {/* Action Buttons */}
+          <div className="action-buttons-grid">
+            <button className="action-button">
+              Create quiz
+            </button>
+            <button className="action-button">
+              Study Quizzzes
+            </button>
+            <button className="action-button">
+              Challenge friends
+            </button>
           </div>
-          <div className="action-card">
-            <h3>Study Quizzes</h3>
-            <p>Review your past quizzes or explore new topics.</p>
-            {/* No button functionality yet */}
-          </div>
-          <div className="action-card">
-            <h3>Challenge Friends</h3>
-            <p>Invite friends for a fun and competitive learning session.</p>
-            {/* No button functionality yet */}
-          </div>
-        </section>
-      </div>
+        </div>
+      </main>
     </div>
   );
-};
+}
 
 export default HomePage;
