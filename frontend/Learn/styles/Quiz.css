@@ -91,6 +91,13 @@
   transform: translateY(-2px);
 }
 
+.next-btn:disabled {
+  background: rgba(241, 245, 249, 0.45);
+  color: rgba(15, 23, 42, 0.55);
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* Completion screen */
 .quiz-complete {
   font-size: 1.6rem;
@@ -101,4 +108,3 @@
   font-size: 1.2rem;
   margin-bottom: 1.5rem;
 }
-
