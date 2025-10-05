@@ -1,201 +1,92 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
-import { addScore } from '../src/leaderboard';
-import { useNavigate } from 'react-router-dom';
-import { getProfile } from '../src/storage/profileStore';
-// IMPORT THE CSS FILE
-import '../styles/Quiz.css'; 
+import { use, useState } from 'react';
+import '../styles/Quiz.css';
+import { useLocation } from "react-router-dom";
 
-// 1. Question Data (Kept the same)
-const questions = [
-    {
-        questionText: 'What is the capital of France?',
-        answerOptions: [
-            { answerText: 'Berlin', isCorrect: false },
-            { answerText: 'Madrid', isCorrect: false },
-            { answerText: 'Paris', isCorrect: true },
-            { answerText: 'Rome', isCorrect: false },
-        ],
-    },
-    {
-        questionText: 'Which company developed React?',
-        answerOptions: [
-            { answerText: 'Google', isCorrect: false },
-            { answerText: 'Facebook', isCorrect: true },
-            { answerText: 'Amazon', isCorrect: false },
-            { answerText: 'Microsoft', isCorrect: false },
-        ],
-    },
-    {
-        questionText: 'The iPhone was created by which company?',
-        answerOptions: [
-            { answerText: 'Apple', isCorrect: true },
-            { answerText: 'Intel', isCorrect: false },
-            { answerText: 'Samsung', isCorrect: false },
-            { answerText: 'Nokia', isCorrect: false },
-        ],
-    },
-    {
-        questionText: 'What is the largest planet in our solar system?',
-        answerOptions: [
-            { answerText: 'Mars', isCorrect: false },
-            { answerText: 'Jupiter', isCorrect: true },
-            { answerText: 'Earth', isCorrect: false },
-            { answerText: 'Saturn', isCorrect: false },
-        ],
-    },
-    {
-        questionText: 'What is the chemical symbol for water?',
-        answerOptions: [
-            { answerText: 'O2', isCorrect: false },
-            { answerText: 'H2O', isCorrect: true },
-            { answerText: 'CO2', isCorrect: false },
-            { answerText: 'NaCl', isCorrect: false },
-        ],
-    },
-    {
-        questionText: 'How many continents are there?',
-        answerOptions: [
-            { answerText: '5', isCorrect: false },
-            { answerText: '6', isCorrect: false },
-            { answerText: '7', isCorrect: true },
-            { answerText: '8', isCorrect: false },
-        ],
-    },
-    {
-        questionText: 'What is the highest mountain in the world?',
-        answerOptions: [
-            { answerText: 'K2', isCorrect: false },
-            { answerText: 'Mount Everest', isCorrect: true },
-            { answerText: 'Mount Fuji', isCorrect: false },
-            { answerText: 'Matterhorn', isCorrect: false },
-        ],
-    },
-    {
-        questionText: 'Which language is React built on?',
-        answerOptions: [
-            { answerText: 'Python', isCorrect: false },
-            { answerText: 'Java', isCorrect: false },
-            { answerText: 'JavaScript', isCorrect: true },
-            { answerText: 'C#', isCorrect: false },
-        ],
-    },
-    {
-        questionText: 'What is 8 * 9?',
-        answerOptions: [
-            { answerText: '64', isCorrect: false },
-            { answerText: '72', isCorrect: true },
-            { answerText: '81', isCorrect: false },
-            { answerText: '63', isCorrect: false },
-        ],
-    },
-    {
-        questionText: 'What does HTML stand for?',
-        answerOptions: [
-            { answerText: 'Hyper Text Markup Language', isCorrect: true },
-            { answerText: 'High Tech Modern Language', isCorrect: false },
-            { answerText: 'Hyperlink and Text Markup', isCorrect: false },
-            { answerText: 'Home Tool Markup Language', isCorrect: false },
-        ],
-    },
+const sampleQuestions = [
+  { question: 'What does HTML stand for?', options: ['HyperText Markup Language', 'HyperText Machine Language', 'HighText Markdown Language', 'None of the above'], answer: 0 },
+  { question: 'Which programming language is used for web apps?', options: ['Python', 'JavaScript', 'C++', 'All of the above'], answer: 1 },
+  { question: 'What year was JavaScript created?', options: ['1991', '1995', '2000', '1989'], answer: 1 },
+  { question: 'CSS is used for?', options: ['Structure', 'Styling', 'Database', 'Logic'], answer: 1 },
+  { question: 'React is maintained by?', options: ['Google', 'Facebook (Meta)', 'Microsoft', 'Twitter'], answer: 1 },
+  { question: 'Which of these is a JavaScript framework?', options: ['Laravel', 'Django', 'React', 'Flask'], answer: 2 },
+  { question: 'Which tag is used for inserting a line break in HTML?', options: ['<lb>', '<break>', '<br>', '<hr>'], answer: 2 },
+  { question: 'Which keyword is used to define a constant in JavaScript?', options: ['let', 'var', 'const', 'constant'], answer: 2 },
+  { question: 'In CSS, which property is used to change text color?', options: ['font-color', 'color', 'text-color', 'fgcolor'], answer: 1 },
+  { question: 'What does API stand for?', options: ['Application Programming Interface', 'Applied Programming Internet', 'App Performance Interface', 'Application Program Input'], answer: 0 }
 ];
 
-const Quiz = () => {
-    const { user, isAuthenticated, loginWithRedirect } = useAuth0();
-    const navigate = useNavigate();
-    const [profile, setProfile] = useState(() => getProfile(user));
-    const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [score, setScore] = useState(0);
-    const [showScore, setShowScore] = useState(false);
-    const [startedAt, setStartedAt] = useState(() => Date.now());
+export default function Quiz() {
+  const [current, setCurrent] = useState(0);
+  const [score, setScore] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const [finished, setFinished] = useState(false);
 
-    useEffect(() => {
-        setProfile(getProfile(user));
-    }, [user]);
+  const location = useLocation();
+  let { quiz } = location.state;
+  let quizzes = quiz.message;
 
-    useEffect(() => {
-        setStartedAt(Date.now());
-    }, []);
+  // If quizzes is a string, extract the array and parse it
+  if (typeof quizzes === "string") {
+    // Extract the array part from the string
+    const arrMatch = quizzes.match(/\[.*\]/s);
+    let arrStr = quizzes;
+    if (arrMatch) arrStr = arrMatch[0];
+    try {
+      quizzes = JSON.parse(arrStr.replace(/'/g, '"'));
+    } catch {
+      quizzes = sampleQuestions;
+    }
+  }
 
-    const handleAnswerOptionClick = (isCorrect) => {
-        if (isCorrect) {
-            setScore(score + 1);
-        }
+  if (!Array.isArray(quizzes)) {
+    quizzes = sampleQuestions;
+  }
 
-        const nextQuestion = currentQuestion + 1;
+  console.log("Quiz data:", quizzes);
 
-        if (nextQuestion < questions.length) {
-            setCurrentQuestion(nextQuestion);
-        } else {
-            setShowScore(true);
-        }
-    };
+  const handleNext = () => {
+    if (selected === quizzes[current].answer) {
+      setScore(score + 1);
+    }
+    if (current + 1 < quizzes.length) {
+      setCurrent(current + 1);
+      setSelected(null);
+    } else {
+      setFinished(true);
+    }
+  };
 
-    return (
-        <div className="app">
-            {showScore ? (
-                /* -------------------
-                * 1. SCORE SECTION (Uses className="score-section")
-                * ------------------- */
-                <div className="score-section">
-                    <div style={{ marginBottom: 12 }}>
-                        You scored {score} out of {questions.length}
-                    </div>
-                    <button
-                      className="answer-button"
-                      onClick={() => {
-                        const durationSeconds = Math.round((Date.now() - startedAt) / 1000);
-                        addScore({
-                          score,
-                          total: questions.length,
-                          difficulty: 'Practice',
-                          durationSeconds,
-                        }, isAuthenticated ? user : undefined);
-                        if (!isAuthenticated && loginWithRedirect) {
-                          const wantLogin = confirm('Score saved locally. Log in to sync it to your profile?');
-                          if (wantLogin) {
-                            loginWithRedirect({ screen_hint: 'login' }).catch(() => {});
-                            return;
-                          }
-                        }
-                        navigate('/leaderboard');
-                      }}
-                    >
-                      Save Score to Leaderboard
-                    </button>
-                </div>
-            ) : (
-                /* -------------------
-                * 2. QUESTION SECTION (Uses classNames for layout and elements)
-                * ------------------- */
-                <>
-                    {/* The question container is structured to allow flex styling */}
-                    <div className="question-section">
-                        <div className="question-count">
-                            <span>Question {currentQuestion + 1}</span>/{questions.length}
-                        </div>
-                        <div className="question-text">
-                            {questions[currentQuestion].questionText}
-                        </div>
-                    </div>
 
-                    <div className="answer-section">
-                        {/* Map over the answer options for the current question */}
-                        {questions[currentQuestion].answerOptions.map((answerOption, index) => (
-                            <button
-                                key={index}
-                                // Uses className="answer-button"
-                                className="answer-button"
-                                onClick={() => handleAnswerOptionClick(answerOption.isCorrect)}
-                            >
-                                {answerOption.answerText}
-                            </button>
-                        ))}
-                    </div>
-                </>
-            )}
-        </div>
-    );
-};
-
-export default Quiz;
+  return (
+    <div className="quiz-container">
+      <div className="quiz-card">
+        {finished ? (
+          <div className="quiz-complete">
+            <h2>Quiz Complete 🎉</h2>
+            <p className="score-text">Your Score: {score} / {quizzes.length}</p>
+            <div className="progress-bar"><div className="progress-bar-fill" style={{ width: `${(score / quizzes.length) * 100}%` }}></div></div>
+            <button className="next-btn" onClick={() => window.location.reload()}>Retake Quiz</button>
+          </div>
+        ) : (
+          <div key={current}>
+            <h2>Question {current + 1} / {quizzes.length}</h2>
+            <div className="progress-bar"><div className="progress-bar-fill" style={{ width: `${((current + 1) / quizzes.length) * 100}%` }}></div></div>
+            <h3 className="quiz-question">{quizzes[current].question}</h3>
+            <div className="quiz-options">
+              {quizzes[current].options.map((opt, i) => (
+                <button
+                  key={i}
+                  className={`quiz-option ${selected === i ? 'selected' : ''}`}
+                  onClick={() => setSelected(i)}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
+            <button onClick={handleNext} disabled={selected === null} className="next-btn">Next</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
