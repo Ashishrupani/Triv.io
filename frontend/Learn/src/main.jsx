@@ -4,6 +4,7 @@ import { Auth0Provider } from "@auth0/auth0-react";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import "./index.css";
+import "../styles/global.css";
 
 createRoot(document.getElementById("root")).render(
   <Auth0Provider

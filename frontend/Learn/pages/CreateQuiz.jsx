@@ -283,7 +283,7 @@ export default function App() {
   }
 
   return (
-    <>
+    <div className="create-quiz-page">
       <header className="site-header">
         <div className="site-wrap">
           <a className="brand" href="/">
@@ -510,6 +510,6 @@ export default function App() {
           </footer>
         </div>
       </div>
-    </>
+    </div>
   );
 }
