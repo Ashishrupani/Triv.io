@@ -1,6 +1,7 @@
 // src/App.jsx
 
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import "../src/App.css";
 import "../styles/CreateQuiz.css";
@@ -174,17 +175,20 @@ export default function App() {
 
     setMessage("Sending notes to backend...");
 
-    try {
-      // const resp = await fetch('/api/generate-quiz', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ notes }) });
+    console.log("Sending notes to backend:", notes);
+    const resp = await fetch("http://127.0.0.1:5000/api/upload-notes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: "make a 10 question quiz using these notes below.",
+        notes: notes,
+      }),
+    });
+    const data = await resp.json();
 
-      // const data = await resp.json();
+    console.log("Backend response:", data);
 
-      alert("Backend not implemented. See code comments for contract.");
-    } catch {
-      setMessage("Failed to contact backend");
-    } finally {
-      setTimeout(() => setMessage(""), 1200);
-    }
+    setMessage("Failed to contact backend");
   }
 
   function generateLocalDemoQuiz() {
