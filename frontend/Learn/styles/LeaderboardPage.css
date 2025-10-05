@@ -1,0 +1,286 @@
+:root {
+    --header-bg: #fff;
+    --header-text: #5e548e; /* Dark purple */
+    --header-link-active: #8B5CF6; /* Lighter purple */
+    --card-bg: #fdfbff; /* Very light purple/white */
+    --card-border-radius: 20px;
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --welcome-title-color: #5e548e;
+    --xp-label-color: #8B5CF6;
+    --xp-bar-bg: #e0e0e0;
+    --xp-bar-fill-gradient-start: #a78bfa; /* Medium purple */
+    --xp-bar-fill-gradient-end: #8b5cf6; /* Stronger purple */
+    --xp-value-color: #8b5cf6;
+    --button-gradient-start: #8B5CF6; /* Stronger purple */
+    --button-gradient-end: #a78bfa; /* Medium purple */
+    --button-text-color: #fff;
+    --button-hover-shadow: 0 6px 15px rgba(139, 92, 246, 0.3);
+  }
+  
+  body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #f8f8fc;
+  }
+  
+  .home-page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    background-color: #f8f8fc;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Abstract background styling (top section) */
+  .home-page-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 300px;
+    background: linear-gradient(135deg, #a78bfa, #c4b5fd);
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    z-index: 0;
+  }
+  
+  /* Header Styles */
+  .home-header {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    padding: 20px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--header-text);
+    box-sizing: border-box;
+  }
+  
+  .header-logo-text {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #fff;
+  }
+  
+  .home-nav-links {
+    display: flex;
+    gap: 40px;
+  }
+  
+  .home-nav-item {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
+    font-size: 1.1rem;
+    padding-bottom: 5px;
+    position: relative;
+    transition: color 0.3s ease;
+  }
+  
+  .home-nav-item:hover {
+    color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .home-nav-item.active {
+    color: #fff;
+    font-weight: 600;
+  }
+  
+  .home-nav-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 25px;
+    height: 3px;
+    background-color: #fff;
+    border-radius: 2px;
+  }
+  
+  /* Main Content / Card Styles */
+  .home-main-content {
+    position: relative;
+    z-index: 5;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    margin-top: -100px;
+  }
+  
+  .home-card {
+    background: var(--card-bg);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--card-shadow);
+    padding: 50px 70px;
+    width: 100%;
+    max-width: 700px;
+    text-align: center;
+  }
+  
+  .welcome-back-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--welcome-title-color);
+    margin-bottom: 40px;
+  }
+  
+  .xp-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 60px;
+  }
+  
+  .xp-label {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--xp-label-color);
+  }
+  
+  .xp-bar-container {
+    width: 300px;
+    height: 15px;
+    background-color: var(--xp-bar-bg);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .xp-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--xp-bar-fill-gradient-start), var(--xp-bar-fill-gradient-end));
+    border-radius: 10px;
+    transition: width 0.5s ease-out;
+  }
+  
+  .xp-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--xp-value-color);
+  }
+  
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+  }
+  
+  .action-button {
+    flex-basis: 200px;
+    flex-grow: 1;
+    max-width: 280px;
+    padding: 20px 30px;
+    border: none;
+    border-radius: 15px;
+    background: linear-gradient(135deg, var(--button-gradient-start), var(--button-gradient-end));
+    color: var(--button-text-color);
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .action-button:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--button-hover-shadow);
+  }
+  
+  /* Leaderboard Styles */
+  .leaderboard-card {
+    max-width: 1000px;
+    padding: 50px 60px;
+  }
+  
+  .leaderboard-table {
+    width: 100%;
+    margin-top: 30px;
+  }
+  
+  .leaderboard-header {
+    display: grid;
+    grid-template-columns: 100px 1fr 150px 150px;
+    padding: 15px 20px;
+    background-color: #f3f4f6;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-weight: 700;
+    color: #3d3068;
+    font-size: 1.1rem;
+  }
+  
+  .leaderboard-row {
+    display: grid;
+    grid-template-columns: 100px 1fr 150px 150px;
+    padding: 20px;
+    background-color: #f9fafb;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    align-items: center;
+    font-size: 1.1rem;
+    transition: transform 0.2s ease;
+  }
+  
+  .leaderboard-row:hover {
+    transform: translateX(5px);
+  }
+  
+  .rank-badge {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+  }
+  
+  .rank-badge.gold {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+  }
+  
+  .rank-badge.bronze {
+    background: linear-gradient(135deg, #b45309, #92400e);
+  }
+  
+  .rank-badge.silver {
+    background: linear-gradient(135deg, #9ca3af, #6b7280);
+  }
+  
+  .rank-number {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #6b7280;
+    padding-left: 15px;
+  }
+  
+  .player-name {
+    font-weight: 700;
+    color: #3d3068;
+    font-size: 1.2rem;
+  }
+  
+  .player-team {
+    font-weight: 600;
+    color: #3d3068;
+    font-size: 1.1rem;
+  }
+  
+  .player-points {
+    font-weight: 700;
+    color: #3d3068;
+    text-align: center;
+    font-size: 1.1rem;
+  }
+ 
