@@ -1,9 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth0 } from '@auth0/auth0-react';
 import '../styles/Quiz.css';
-import { addScore, summarizePlayer } from '../src/leaderboard';
-import { getProfile } from '../src/storage/profileStore';
 
 const STORAGE_KEYS = {
   session: 'latest_quiz_v1',
@@ -165,106 +162,31 @@ function loadQuiz(location) {
   return readStored('session') || readStored('local') || { questions: [], meta: {} };
 }
 
-function readStoredQuiz() {
-  try {
-    const raw = sessionStorage.getItem(STORAGE_KEYS.session) || localStorage.getItem(STORAGE_KEYS.local);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    if (parsed && Array.isArray(parsed.questions) && parsed.questions.length) {
-      return parsed;
-    }
-  } catch (err) {
-    console.warn('Failed to read stored quiz', err);
-  }
-  return null;
-}
-
 export default function Quiz() {
-  const { isAuthenticated, loginWithRedirect, user } = useAuth0();
   const location = useLocation();
   const navigate = useNavigate();
 
-  const loadingFlag = Boolean(
-    location.state?.loading ||
-      location.state?.isGenerating ||
-      location.state?.meta?.loading
-  );
-  const loadingMessage =
-    location.state?.loadingMessage ||
-    location.state?.meta?.loadingMessage ||
-    'Asking the AI to craft your quiz...';
-
   const [{ questions: initialQuestions, meta: initialMeta }, setInitialData] = useState(() => loadQuiz(location));
-  const [questions, setQuestions] = useState(() =>
-    initialQuestions.length ? initialQuestions : loadingFlag ? [] : sampleQuestions
-  );
+  const [questions, setQuestions] = useState(() => (initialQuestions.length ? initialQuestions : sampleQuestions));
   const [meta, setMeta] = useState(initialMeta);
-  const [usingSample, setUsingSample] = useState(!loadingFlag && !initialQuestions.length);
-  const [isGenerating, setIsGenerating] = useState(loadingFlag && !initialQuestions.length);
+  const [usingSample, setUsingSample] = useState(!initialQuestions.length);
 
   const [current, setCurrent] = useState(0);
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState(null);
   const [finished, setFinished] = useState(false);
-  const [leaderboardStatus, setLeaderboardStatus] = useState('');
-  const [rankSummary, setRankSummary] = useState(null);
 
   useEffect(() => {
-    const freshLoadingFlag = Boolean(
-      location.state?.loading ||
-        location.state?.isGenerating ||
-        location.state?.meta?.loading
-    );
-
     const data = loadQuiz(location);
     setInitialData(data);
-    if (data.questions.length) {
-      setQuestions(data.questions);
-      setUsingSample(false);
-      setIsGenerating(false);
-    } else if (freshLoadingFlag) {
-      setQuestions([]);
-      setUsingSample(false);
-      setIsGenerating(true);
-    } else {
-      setQuestions(sampleQuestions);
-      setUsingSample(true);
-      setIsGenerating(false);
-    }
+    setQuestions(data.questions.length ? data.questions : sampleQuestions);
     setMeta(data.meta || {});
+    setUsingSample(!data.questions.length);
     setCurrent(0);
     setScore(0);
     setSelected(null);
     setFinished(false);
-    setLeaderboardStatus('');
-    setRankSummary(null);
   }, [location.key]);
-
-  useEffect(() => {
-    if (!isGenerating) return;
-
-    const interval = setInterval(() => {
-      const stored = readStoredQuiz();
-      if (stored && Array.isArray(stored.questions) && stored.questions.length) {
-        setQuestions(stored.questions);
-        setMeta(stored.meta || {});
-        setIsGenerating(false);
-        setUsingSample(false);
-        setCurrent(0);
-        setScore(0);
-        setSelected(null);
-        setFinished(false);
-        setLeaderboardStatus('');
-        setRankSummary(null);
-        clearInterval(interval);
-      }
-    }, 1200);
-
-    return () => clearInterval(interval);
-  }, [isGenerating]);
-
-  const profile = useMemo(() => getProfile(user), [user, finished]);
-  const playerName = profile.displayName || user?.name || 'You';
 
   const totalQuestions = questions.length;
   const progressPercentage = ((current + 1) / totalQuestions) * 100;
@@ -292,57 +214,11 @@ export default function Quiz() {
     setScore(0);
     setSelected(null);
     setFinished(false);
-    setLeaderboardStatus('');
-    setRankSummary(null);
   };
 
   const handleGoBack = () => {
     navigate('/create-quiz');
   };
-
-  const handleSaveScore = () => {
-    const payload = {
-      score,
-      total: totalQuestions,
-      difficulty: quizDifficulty,
-      durationSeconds: meta.durationSeconds,
-    };
-
-    try {
-      addScore(payload, isAuthenticated ? user : undefined);
-      const summary = summarizePlayer(playerName);
-      setRankSummary(summary);
-      setLeaderboardStatus('Saved to leaderboard');
-    } catch (err) {
-      console.warn('Failed to save score', err);
-      setLeaderboardStatus('Could not save score');
-    }
-
-    if (!isAuthenticated) {
-      const shouldLogin = confirm('Score saved locally. Log in to sync across devices?');
-      if (shouldLogin) {
-        loginWithRedirect({ screen_hint: 'login' }).catch(() => {});
-      }
-    }
-  };
-
-  if (isGenerating && !questions.length) {
-    return (
-      <div className="quiz-container">
-        <div className="quiz-card">
-          <div className="quiz-loading">
-            <div className="quiz-spinner" aria-hidden />
-            <h2>Generating quiz</h2>
-            <p>{loadingMessage}</p>
-            <p style={{ marginTop: '1.2rem', fontSize: '0.95rem', color: '#cbd5f5' }}>
-              This can take a few seconds depending on your notes. We’ll start automatically once the
-              questions arrive.
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="quiz-container">
@@ -371,35 +247,7 @@ export default function Quiz() {
               <button className="next-btn" style={{ background: '#3b82f6' }} onClick={handleGoBack}>
                 Stage more notes
               </button>
-              <button className="next-btn" style={{ background: '#ec4899' }} onClick={handleSaveScore}>
-                Save to leaderboard
-              </button>
             </div>
-            {leaderboardStatus && (
-              <p
-                style={{
-                  marginTop: '1rem',
-                  fontSize: '0.95rem',
-                  color: leaderboardStatus.includes('Saved') ? '#4ade80' : '#facc15',
-                }}
-              >
-                {leaderboardStatus}
-              </p>
-            )}
-            {rankSummary && (
-              <div style={{ marginTop: '1.1rem', fontSize: '0.95rem', lineHeight: 1.6 }}>
-                <div>Total games: {rankSummary.totalGames}</div>
-                <div>Best score: {rankSummary.bestScore}</div>
-                <div>Average accuracy: {rankSummary.averageScore}%</div>
-                <button
-                  className="next-btn"
-                  style={{ background: '#6366f1', marginTop: '0.8rem' }}
-                  onClick={() => navigate('/leaderboard')}
-                >
-                  View leaderboard
-                </button>
-              </div>
-            )}
           </div>
         ) : (
           <div key={current}>
